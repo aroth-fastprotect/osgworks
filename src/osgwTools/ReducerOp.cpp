@@ -104,6 +104,8 @@ bool ReducerOp::convertToDEUITriangles( osg::Geometry* geom )
     unsigned int remainder = 0xffffffff;
     for( it=pslIntermed2.begin(); it != pslIntermed2.end(); it++ )
     {
+        if (!(*it).valid())
+            continue;
         const osg::DrawElementsUInt* deui = static_cast< const osg::DrawElementsUInt* >( (*it).get() );
         if( deui->getMode() == GL_TRIANGLES )
         {
