@@ -1,10 +1,18 @@
-SET( LIB_NAME osgdb_osgwTools )
 
-ADD_OSGPLUGIN( ${LIB_NAME}
+SET(TARGET_SRC 
     dotosgAbsoluteModelTransform.cpp
     dotosgCameraConfigObject.cpp
     dotosgFunctionalMap.cpp
     dotosgRefID.cpp
-)
+	)
 
-INCLUDE(ModuleInstall OPTIONAL)
+SET(TARGET_LIBRARIES_VARS
+	OSG_LIBRARY
+	OSGDB_LIBRARY
+	)
+
+SET(TARGET_ADDED_LIBRARIES
+	osgwTools
+	)
+
+SETUP_PLUGIN( osgwTools )

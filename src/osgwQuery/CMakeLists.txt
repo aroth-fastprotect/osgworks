@@ -1,12 +1,12 @@
 set( LIB_NAME osgwQuery )
 
-if( BUILD_SHARED_LIBS )
+if( OSGWORKS_BUILD_SHARED_LIBS )
     add_definitions( -DOSGWQUERY_LIBRARY )
 endif()
 
 
 set( HEADER_PATH ${PROJECT_SOURCE_DIR}/include/${LIB_NAME} )
-set( LIB_PUBLIC_HEADERS
+set( TARGET_PUBLIC_H
     ${HEADER_PATH}/QueryAPI.h
     ${HEADER_PATH}/QueryBenchmarks.h
     ${HEADER_PATH}/QueryComputation.h
@@ -16,7 +16,7 @@ set( LIB_PUBLIC_HEADERS
     ${HEADER_PATH}/Export.h
 )
 
-set( _osgwQuerySourceFiles
+set( TARGET_SRC
     QueryAPI.cpp
     QueryBenchmarks.cpp
     QueryComputation.cpp
@@ -25,33 +25,16 @@ set( _osgwQuerySourceFiles
     QueryUtils.cpp
 )
 
-add_library( ${LIB_NAME}
-    ${LIB_PUBLIC_HEADERS}
-    ${_osgwQuerySourceFiles}
-)
+SET(TARGET_LIBRARIES_VARS
+	OSG_LIBRARY
+	OSGGA_LIBRARY
+	OSGUTIL_LIBRARY
+	OSGTEXT_LIBRARY
+	)
 
-find_package( OpenGL REQUIRED )
-include_directories(
-    ${OPENGL_INCLUDE_DIR}
-)
+SET(TARGET_ADDED_LIBRARIES
+	osgwTools
+	)
 
-if( BUILD_SHARED_LIBS )
-    # Shared libs must explicitly resolve all symbols.
-    # Link against our dependency: OSG.
-    target_link_libraries( ${LIB_NAME}
-        ${OSG_LIBRARIES}
-        ${OPENGL_LIBRARIES}
-    )
+SETUP_OSG_LIB( ${LIB_NAME} )
 
-    # osgwQuery depends on osgwTools
-    target_link_libraries( ${LIB_NAME}
-        optimized "osgwTools"
-        debug "osgwTools"
-    )
-endif()
-
-set_target_properties( ${LIB_NAME} PROPERTIES VERSION ${OSGWORKS_VERSION} )
-set_target_properties( ${LIB_NAME} PROPERTIES SOVERSION ${OSGWORKS_VERSION} )
-set_target_properties( ${LIB_NAME} PROPERTIES PROJECT_LABEL "Lib ${LIB_NAME}" )
-
-include( ModuleInstall REQUIRED )

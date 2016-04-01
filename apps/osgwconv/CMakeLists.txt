@@ -1,3 +1,11 @@
-MAKE_EXECUTABLE( osgwconv
-    osgwconv.cpp
+SET(TARGET_SRC
+	osgwconv.cpp
 )
+
+SET(TARGET_LIBRARIES_VARS
+	OSG_LIBRARY
+	OSGDB_LIBRARY
+	osgwTools
+	)
+
+SETUP_COMMANDLINE_APPLICATION( osgwconv)

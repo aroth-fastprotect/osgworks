@@ -1,15 +1,15 @@
 set( LIB_NAME osgwTools )
 
-if( BUILD_SHARED_LIBS )
+if( OSGWORKS_BUILD_SHARED_LIBS )
     add_definitions( -DOSGWTOOLS_LIBRARY )
 endif()
 
 
 set( HEADER_PATH ${PROJECT_SOURCE_DIR}/include/${LIB_NAME} )
 
-configure_file( "${HEADER_PATH}/Version.h.in" "${HEADER_PATH}/Version.h" @ONLY)
+FAST_CONFIGURE_FILE( "${HEADER_PATH}/Version.h.in" "${HEADER_PATH}/Version.h" @ONLY)
 
-set( LIB_PUBLIC_HEADERS
+set( TARGET_PUBLIC_H
     ${HEADER_PATH}/Export.h
     ${HEADER_PATH}/AbsoluteModelTransform.h
     ${HEADER_PATH}/CallbackSupport.h
@@ -52,7 +52,7 @@ set( LIB_PUBLIC_HEADERS
     ${HEADER_PATH}/Uniqifier.h
     ${HEADER_PATH}/Version.h
 )
-set( _osgwToolsSourceFiles
+set( TARGET_SRC
     AbsoluteModelTransform.cpp
     CallbackSupport.cpp
     CameraConfigObject.cpp
@@ -93,38 +93,28 @@ set( _osgwToolsSourceFiles
     Version.cpp
 )
 
-unset( _osgwToolsSourceFilesPre319 )
-if( ${OPENSCENEGRAPH_VERSION} VERSION_LESS "3.1.9" )
-    list( APPEND LIB_PUBLIC_HEADERS
-        ${HEADER_PATH}/DecimatorOp.h
-        ${HEADER_PATH}/MeshOptimizers.h
-        ${HEADER_PATH}/ShortEdgeOp.h
-        ${HEADER_PATH}/TangentSpaceGeneratorDouble.h
-        ${HEADER_PATH}/TangentSpaceOp.h
-    )
-    set( _osgwToolsSourceFilesPre319
-        DecimatorOp.cpp
-        MeshOptimizers.cpp
-        ShortEdgeOp.cpp
-        TangentSpaceGeneratorDouble.cpp
-        TangentSpaceOp.cpp
-    )
-endif()
-
-add_library( ${LIB_NAME}
-    ${LIB_PUBLIC_HEADERS}
-    ${_osgwToolsSourceFiles}
-    ${_osgwToolsSourceFilesPre319}
+list( APPEND TARGET_PUBLIC_H
+	${HEADER_PATH}/DecimatorOp.h
+	${HEADER_PATH}/MeshOptimizers.h
+	${HEADER_PATH}/ShortEdgeOp.h
+	${HEADER_PATH}/TangentSpaceGeneratorDouble.h
+	${HEADER_PATH}/TangentSpaceOp.h
 )
-if( BUILD_SHARED_LIBS )
-    target_link_libraries( ${LIB_NAME}
-        ${OSG_LIBRARIES}
-        ${OPENGL_gl_LIBRARY}
-    )
-endif()
+list( APPEND TARGET_SRC
+	DecimatorOp.cpp
+	MeshOptimizers.cpp
+	ShortEdgeOp.cpp
+	TangentSpaceGeneratorDouble.cpp
+	TangentSpaceOp.cpp
+)
 
-set_target_properties( ${LIB_NAME} PROPERTIES VERSION ${OSGWORKS_VERSION} )
-set_target_properties( ${LIB_NAME} PROPERTIES SOVERSION ${OSGWORKS_VERSION} )
-set_target_properties( ${LIB_NAME} PROPERTIES PROJECT_LABEL "Lib ${LIB_NAME}" )
+SET(TARGET_LIBRARIES_VARS
+	OSG_LIBRARY
+	OSGDB_LIBRARY
+	OSGGA_LIBRARY
+	OSGTEXT_LIBRARY
+	OSGUTIL_LIBRARY
+	OSGVIEWER_LIBRARY
+	)
 
-include( ModuleInstall REQUIRED )
+SETUP_OSG_LIB( ${LIB_NAME} )

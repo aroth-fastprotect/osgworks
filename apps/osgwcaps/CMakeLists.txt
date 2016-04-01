@@ -1,3 +1,12 @@
-MAKE_EXECUTABLE( osgwcaps
-    osgwcaps.cpp
+SET(TARGET_SRC
+	osgwcaps.cpp
 )
+
+SET(TARGET_LIBRARIES_VARS
+	OSG_LIBRARY
+	OSGDB_LIBRARY
+	osgwTools
+	)
+
+SETUP_COMMANDLINE_APPLICATION( osgwcaps)
+

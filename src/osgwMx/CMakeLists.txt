@@ -34,7 +34,7 @@ if( VRPN_FOUND )
 endif() #VRPN_FOUND
 
 
-set( LIB_PUBLIC_HEADERS
+set( TARGET_PUBLIC_H
     ${DX_DEPENDENT_HEADERS}
     ${VRPN_DEPENDENT_HEADERS}
     ${HEADER_PATH}/Export.h
@@ -46,7 +46,7 @@ set( LIB_PUBLIC_HEADERS
     ${HEADER_PATH}/MxUtils.h
 )
 
-set( _osgwMxSourceFiles
+set( TARGET_SRC
     ${DX_DEPENDENT_SRC}
     ${VRPN_DEPENDENT_SRC}
     CameraUpdateCallback.cpp
@@ -58,43 +58,17 @@ set( _osgwMxSourceFiles
 )
 
 
-add_library( ${LIB_NAME}
-    ${LIB_PUBLIC_HEADERS}
-    ${_osgwMxSourceFiles}
-)
+SET(TARGET_LIBRARIES_VARS
+	OSG_LIBRARY
+	osgwTools
+	)
 
-find_package( OpenGL REQUIRED )
-include_directories(
-    ${OPENGL_INCLUDE_DIR}
-)
-
-if( BUILD_SHARED_LIBS )
-    # Shared libs must explicitly resolve all symbols.
-    # Link against our dependency: OSG.
-    target_link_libraries( ${LIB_NAME}
-        ${OSG_LIBRARIES}
-        ${OPENGL_LIBRARIES}
-    )
-
-    # osgwMx depends on osgwTools
-    target_link_libraries( ${LIB_NAME}
-        optimized "osgwTools"
-        debug "osgwTools"
-    )
-
-    if( DIRECTINPUT_FOUND )
-       target_link_libraries( ${LIB_NAME} ${DIRECTINPUT_LIBRARIES} )
-    endif()
-    
-    if( VRPN_FOUND )
-       target_link_libraries( ${LIB_NAME} ${VRPN_LIBRARY} )
-    endif()
-    
-
+if( DIRECTINPUT_FOUND )
+	LIST(APPEND TARGET_LIBRARIES_VARS DIRECTINPUT_LIBRARIES)
 endif()
 
-set_target_properties( ${LIB_NAME} PROPERTIES VERSION ${OSGWORKS_VERSION} )
-set_target_properties( ${LIB_NAME} PROPERTIES SOVERSION ${OSGWORKS_VERSION} )
-set_target_properties( ${LIB_NAME} PROPERTIES PROJECT_LABEL "Lib ${LIB_NAME}" )
+if( VRPN_FOUND )
+	LIST(APPEND TARGET_LIBRARIES_VARS VRPN_LIBRARY)
+endif()
 
-include( ModuleInstall REQUIRED )
+SETUP_OSG_LIB( ${LIB_NAME} )

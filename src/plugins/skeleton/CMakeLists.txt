@@ -1,8 +1,13 @@
-SET( LIB_NAME osgdb_skeleton )
+SET(TARGET_SRC ReaderWriterSkeleton.cpp)
+SET(TARGET_PUBLIC_H ReaderWriterSkeleton.h)
 
-ADD_OSGPLUGIN( ${LIB_NAME}
-    ReaderWriterSkeleton.cpp
-    ReaderWriterSkeleton.h
-)
+SET(TARGET_LIBRARIES_VARS
+	OSG_LIBRARY
+	OSGDB_LIBRARY
+	)
 
-INCLUDE(ModuleInstall OPTIONAL)
+SET(TARGET_ADDED_LIBRARIES
+	osgwTools
+	)
+
+SETUP_PLUGIN( skeleton )

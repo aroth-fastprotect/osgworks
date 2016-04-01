@@ -1,8 +1,8 @@
-set( LIB_NAME osgdb_osgobjects )
+SET(TARGET_SRC ReaderWriterOSGObjects.cpp)
+SET(TARGET_PUBLIC_H ReaderWriterOSGObjects.h)
 
-ADD_OSGPLUGIN( ${LIB_NAME}
-    ReaderWriterOSGObjects.cpp
-    ReaderWriterOSGObjects.h
-)
-
-include( ModuleInstall OPTIONAL )
+SET(TARGET_LIBRARIES_VARS
+	OSG_LIBRARY
+	OSGDB_LIBRARY
+	)
+SETUP_PLUGIN( osgobjects )

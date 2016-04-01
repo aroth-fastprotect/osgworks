@@ -1,5 +1,5 @@
 ADD_SUBDIRECTORY( osgwControls )
-ADD_SUBDIRECTORY( osgwMx )
+#ADD_SUBDIRECTORY( osgwMx )
 ADD_SUBDIRECTORY( osgwQuery )
 ADD_SUBDIRECTORY( osgwTools )
 ADD_SUBDIRECTORY( plugins )
