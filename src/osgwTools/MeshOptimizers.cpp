@@ -90,30 +90,30 @@ struct GeometryArrayGatherer
     GeometryArrayGatherer(osg::Geometry& geometry)
         : _useDrawElements(true)
     {
-        add(geometry.getVertexArray(),osg::Geometry::BIND_PER_VERTEX);
-        add(geometry.getNormalArray(),geometry.getNormalBinding());
-        add(geometry.getColorArray(),geometry.getColorBinding());
-        add(geometry.getSecondaryColorArray(),geometry.getSecondaryColorBinding());
-        add(geometry.getFogCoordArray(),geometry.getFogCoordBinding());
+        add(geometry.getVertexArray(),osg::Array::BIND_PER_VERTEX);
+        add(geometry.getNormalArray(), (osg::Array::Binding)geometry.getNormalBinding());
+        add(geometry.getColorArray(), (osg::Array::Binding)geometry.getColorBinding());
+        add(geometry.getSecondaryColorArray(), (osg::Array::Binding)geometry.getSecondaryColorBinding());
+        add(geometry.getFogCoordArray(), (osg::Array::Binding)geometry.getFogCoordBinding());
         unsigned int i;
         for(i=0;i<geometry.getNumTexCoordArrays();++i)
         {
-            add(geometry.getTexCoordArray(i),osg::Geometry::BIND_PER_VERTEX);
+            add(geometry.getTexCoordArray(i),osg::Array::BIND_PER_VERTEX);
         }
         for(i=0;i<geometry.getNumVertexAttribArrays();++i)
         {
-            add(geometry.getVertexAttribArray(i),geometry.getVertexAttribBinding(i));
+            add(geometry.getVertexAttribArray(i), (osg::Array::Binding)geometry.getVertexAttribBinding(i));
         }
     }
 
-    void add(osg::Array* array, osg::Geometry::AttributeBinding binding)
+    void add(osg::Array* array, osg::Array::Binding binding)
     {
-        if (binding == osg::Geometry::BIND_PER_VERTEX)
+        if (binding == osg::Array::BIND_PER_VERTEX)
         {
             if (array)
                 _arrayList.push_back(array);
         }
-        else if (binding == osg::Geometry::BIND_PER_PRIMITIVE)
+        else if (binding == osg::Array::BIND_PER_PRIMITIVE_SET)
             _useDrawElements = false;
     }
 
@@ -260,17 +260,13 @@ typedef osg::TriangleIndexFunctor<MyTriangleOperator> MyTriangleIndexFunctor;
 
 void IndexMeshVisitor::makeMesh(Geometry& geom)
 {
-        if (geom.getNormalBinding()==osg::Geometry::BIND_PER_PRIMITIVE ||
-        geom.getNormalBinding()==osg::Geometry::BIND_PER_PRIMITIVE_SET) return;
+        if (geom.getNormalBinding()==osg::Array::BIND_PER_PRIMITIVE_SET) return;
 
-    if (geom.getColorBinding()==osg::Geometry::BIND_PER_PRIMITIVE ||
-        geom.getColorBinding()==osg::Geometry::BIND_PER_PRIMITIVE_SET) return;
+    if (geom.getColorBinding()==osg::Array::BIND_PER_PRIMITIVE_SET) return;
 
-    if (geom.getSecondaryColorBinding()==osg::Geometry::BIND_PER_PRIMITIVE ||
-        geom.getSecondaryColorBinding()==osg::Geometry::BIND_PER_PRIMITIVE_SET) return;
+    if (geom.getSecondaryColorBinding()==osg::Array::BIND_PER_PRIMITIVE_SET) return;
 
-    if (geom.getFogCoordBinding()==osg::Geometry::BIND_PER_PRIMITIVE ||
-        geom.getFogCoordBinding()==osg::Geometry::BIND_PER_PRIMITIVE_SET) return;
+    if (geom.getFogCoordBinding()==osg::Array::BIND_PER_PRIMITIVE_SET) return;
 
     // no point optimizing if we don't have enough vertices.
     if (!geom.getVertexArray() || geom.getVertexArray()->getNumElements()<3) return;
